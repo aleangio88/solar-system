@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Solare in Three.js</title>
+    <title>Three.js Solar System</title>
     <style>
         body {
             margin: 0;
@@ -19,49 +19,41 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
-
-<script>
-    // Impostazione scena, camera e renderer
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    // Aggiunta luce
-    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 2);
-    scene.add(ambientLight);
-
-    // Caricamento del modello GLTF
-    const loader = new THREE.GLTFLoader();
-    loader.load('scene.gltf', function (gltf) {
-        const model = gltf.scene;
-        model.scale.set(0.3, 0.3, 0.3);  // Scala il modello se necessario
-        scene.add(model);
-        animate();
-    }, undefined, function (error) {
-        console.error('Errore nel caricamento del modello:', error);
-    });
-
-    // Posizionamento della camera
-    camera.position.z = 5;
-
-    // Funzione di animazione
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
-
-    // Rendi la scena animata
-    animate();
-
-    // Adatta la finestra al ridimensionamento
-    window.addEventListener('resize', () => {
+    <script>
+        // Configura la scena, la telecamera e il renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-    });
-</script>
+        document.body.appendChild(renderer.domElement);
 
+        // Caricatore per il modello GLTF
+        const loader = new THREE.GLTFLoader();
+        
+        // Carica il modello GLTF
+        loader.load('scene.gltf', function(gltf) {
+            scene.add(gltf.scene);
+        }, undefined, function(error) {
+            console.error(error);
+        });
+
+        // Posiziona la telecamera
+        camera.position.z = 10;
+
+        // Funzione di animazione
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Gestione del ridimensionamento della finestra
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
 </body>
 </html>
