@@ -1,0 +1,8 @@
+Model Information:
+* title:	Cartoon Solar System
+* source:	https://sketchfab.com/3d-models/cartoon-solar-system-ed57b993bc874d2d8c966c0646e01abf
+* author:	vustudios (https://sketchfab.com/vustudios)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
