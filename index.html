@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Solar System</title>
+    <title>Sistema Solare in Three.js</title>
     <style>
         body {
             margin: 0;
@@ -16,75 +16,52 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
-    <script>
-        // Create scene
-        const scene = new THREE.Scene();
-        
-        // Create camera
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 30;
 
-        // Create renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+<script>
+    // Impostazione scena, camera e renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-        // Create sunlight
-        const sunLight = new THREE.PointLight(0xffffff, 2, 100);
-        sunLight.position.set(0, 0, 0);
-        scene.add(sunLight);
+    // Aggiunta luce
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 2);
+    scene.add(ambientLight);
 
-        // Load textures
-        const textureLoader = new THREE.TextureLoader();
-        const sunTexture = textureLoader.load('textures/sun.jpg');
-        const earthTexture = textureLoader.load('textures/earth.jpg');
-        const moonTexture = textureLoader.load('textures/moon.jpg');
-
-        // Create Sun
-        const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
-        const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
-        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-        scene.add(sun);
-
-        // Create Earth
-        const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
-        const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-        earth.position.set(10, 0, 0);
-        scene.add(earth);
-
-        // Create Moon
-        const moonGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
-        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-        moon.position.set(12, 0, 0);
-        scene.add(moon);
-
-        // Animate
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Rotate the Earth around the Sun
-            earth.rotation.y += 0.01;
-            earth.position.x = Math.cos(Date.now() * 0.001) * 10;
-            earth.position.z = Math.sin(Date.now() * 0.001) * 10;
-
-            // Rotate the Moon around the Earth
-            moon.position.x = earth.position.x + Math.cos(Date.now() * 0.005) * 2;
-            moon.position.z = earth.position.z + Math.sin(Date.now() * 0.005) * 2;
-
-            renderer.render(scene, camera);
-        }
+    // Caricamento del modello GLTF
+    const loader = new THREE.GLTFLoader();
+    loader.load('scene.gltf', function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(0.3, 0.3, 0.3);  // Scala il modello se necessario
+        scene.add(model);
         animate();
+    }, undefined, function (error) {
+        console.error('Errore nel caricamento del modello:', error);
+    });
 
-        // Handle window resizing
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
+    // Posizionamento della camera
+    camera.position.z = 5;
+
+    // Funzione di animazione
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+
+    // Rendi la scena animata
+    animate();
+
+    // Adatta la finestra al ridimensionamento
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
+</script>
+
 </body>
 </html>
